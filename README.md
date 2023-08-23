@@ -15,3 +15,6 @@ Multiple convenient alignment methods for nodes(节点多种方便对齐方式)
 
 ![对齐饼菜单](https://github.com/yunkezengren/Blender-align-node/assets/98995559/61279459-67f0-4141-a7da-447cdbd05a35)
 ![分布饼菜单](https://github.com/yunkezengren/Blender-align-node/assets/98995559/fed572e1-5956-432b-b789-22120c8b3a63)
+
+##### 两种网格分布
+![两种网格分布](https://github.com/yunkezengren/Blender-align-node/assets/98995559/868a4db2-27b0-4705-8028-ca6136025cd6)
