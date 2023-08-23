@@ -1,6 +1,7 @@
 # Blender-align-node
 节点多种方便对齐分布方式
 ## 安装方式
+![image](https://github.com/yunkezengren/Blender-align-node/assets/98995559/5a2d8163-e825-4b93-8860-a02652a390da)
 ### 下载压缩包解压放进 C:\Users\用户名\AppData\Roaming\Blender Foundation\Blender\3.6(相应版本号)\scripts\addons 
 ### 然后再在偏好设置开启插件
 ![image](https://github.com/yunkezengren/Blender-align-node/assets/98995559/4b5b6687-229a-494d-92f5-edb3ac06a810)
