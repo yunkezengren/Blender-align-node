@@ -6,7 +6,7 @@
 ### 然后再在偏好设置开启插件
 ![image](https://github.com/yunkezengren/Blender-align-node/assets/98995559/4b5b6687-229a-494d-92f5-edb3ac06a810)
 #### 注意 不能直接安装压缩包原因:使用了一些中文名图标,直接安装压缩包会乱码
-根据https://github.com/3DSinghVFX/align_nodes 代码框架修改添加
+根据https://github.com/3DSinghVFX/align_nodes 代码框架修改添加(十分感谢)
 
 1.选中节点可以直接对齐(不需要特意选一个活动节点)
 
