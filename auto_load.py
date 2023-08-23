@@ -35,7 +35,7 @@ images = [image + ".png" for image in images]
 
 class SnapPieMenu(bpy.types.Menu):
     bl_idname = "SPN_MT_snap_pie"
-    bl_label = "Snap Pie"
+    bl_label = "对齐饼菜单"
     def draw(self, context):
         layout = self.layout
         pie = layout.menu_pie()
@@ -58,7 +58,7 @@ class SnapPieMenu(bpy.types.Menu):
 
 class AlignPieMenu(bpy.types.Menu):
     bl_idname = "APN_MT_align_pie"
-    bl_label = "Align Pie"
+    bl_label = "分布饼菜单"
 
     def draw(self, context):
         pie = self.layout.menu_pie()
