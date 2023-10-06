@@ -13,10 +13,15 @@
 
 3.对齐可以保持节点的顺序
 
+4.拉直节点之间连线
+
 两个饼菜单快捷键分别为Shift Q | Ctrl Q，具体可以在偏好设置-键位映射-按键绑定-搜索 Shift Q 然后修改
 
 ![对齐饼菜单](https://github.com/yunkezengren/Blender-align-node/assets/98995559/61279459-67f0-4141-a7da-447cdbd05a35)
 ![分布饼菜单](https://github.com/yunkezengren/Blender-align-node/assets/98995559/fed572e1-5956-432b-b789-22120c8b3a63)
+
+#### 拉直连线
+![image](https://github.com/yunkezengren/Blender-align-node/assets/98995559/9b3de54d-5679-4a6a-b854-17ccb22726fa)
 
 #### 两种网格分布
 ![两种网格分布](https://github.com/yunkezengren/Blender-align-node/assets/98995559/868a4db2-27b0-4705-8028-ca6136025cd6)
