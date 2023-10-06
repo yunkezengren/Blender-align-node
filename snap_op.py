@@ -1,7 +1,10 @@
 import bpy
-from mathutils import Vector
 from math import ceil
-import os
+import mathutils
+from pprint import pprint
+# from mathutils import Vector
+# from builtins import len as length
+
 # bpy.context.space_data.node_tree
 # bpy.context.screen
 class NodeOperator:
@@ -502,4 +505,97 @@ class SnapWidthCenterSideSelectionNodes(bpy.types.Operator, NodeOperator):
                 
         join_parent_frame(selectedNodes, node_parent, frame_node)             # 一行换四行
         
+        return {"FINISHED"}
+
+
+
+def RecrGetNodeFinalLoc(nd):
+    return nd.location + RecrGetNodeFinalLoc(nd.parent) if nd.parent else nd.location
+def UiScale():
+    return bpy.context.preferences.system.dpi / 72
+def Vector( *args): 
+    return mathutils.Vector((args)) 
+def TranslateIface(txt):
+    return bpy.app.translations.pgettext_iface(txt)
+# linear_interpolation
+def lin_inter(x, 
+              xp=[  0.5,   0.8,  1,   1.1,  1.15,   1.2,  1.3,   1.4,  1.5,      2,   2.5,  3,   3.5,    4], 
+              fp=[24.01, 21.48, 22, 21.87, 21.95, 21.77, 20.9, 20.86, 20.66, 20.45, 20.37, 21, 20.83, 21.24]):
+    for i in range(len(xp) - 1):
+        if xp[i] <= x <= xp[i + 1]:
+            x1 = xp[i]
+            y1 = fp[i]
+            x2 = xp[i + 1]
+            y2 = fp[i + 1]
+            y = y1 + (y2 - y1) * (x - x1) / (x2 - x1)
+            return y
+    return None
+
+def GetSocketLocation(nd, in_out):    # in -1 out 1
+    def SkIsLinkedVisible(sk): 
+        if not sk.is_linked:
+            return True
+        return (sk.links) and (sk.links[0].is_muted)
+    list_result = []
+    dict_result = {}
+    ndLoc = RecrGetNodeFinalLoc(nd)
+    ndDim = mathutils.Vector(nd.dimensions / UiScale())
+    if in_out == 1:
+        skLocCarriage = Vector(ndLoc.x + ndDim.x, ndLoc.y - 35)
+    else:
+        skLocCarriage = Vector(ndLoc.x, ndLoc.y - ndDim.y + 15)
+    for sk in nd.outputs if in_out == 1 else reversed(nd.inputs):
+        if (sk.enabled) and (not sk.hide):
+            if (in_out ==  -1) and (sk.type == 'VECTOR') and (SkIsLinkedVisible(sk)) and (not sk.hide_value):
+                if str(sk.rna_type).find("VectorDirection") != -1:
+                    skLocCarriage.y += 20 * 2
+                elif ( not(nd.type in ('BSDF_PRINCIPLED','SUBSURFACE_SCATTERING')) )or( not(sk.name in ("Subsurface Radius","Radius"))):
+                    skLocCarriage.y += 30 * 2
+            goalPos = skLocCarriage.copy()
+            if sk.is_linked:
+                dict_result[sk] = {"pos": goalPos, "name": TranslateIface(sk.label if sk.label else sk.name)}
+            ui_scale = bpy.context.preferences.view.ui_scale
+            skLocCarriage.y -= lin_inter(ui_scale) * in_out     # 缩放 1 -> 22  1.1 -> 21.88 
+    return dict_result
+
+class Straight_Link(bpy.types.Operator, NodeOperator):
+    bl_idname = "node.straight_link"
+    bl_label = "straight_link"
+    bl_description = "拉直节点输入输出之间连线-需要选中活动节点"
+
+    def execute(self, context):
+        tree = context.space_data.edit_tree
+        links = tree.links
+        a_node = context.active_node
+
+        from_nodes = [a_node]
+        to_nodes = [a_node]
+        condition = 1
+        while condition:
+            condition = 0
+            temp_from_nodes = []; temp_to_nodes = []
+            for condition_node in from_nodes:
+                condition_SkIn  = GetSocketLocation(condition_node, -1)
+                for link in links:
+                    from_node = link.from_node; to_node = link.to_node
+                    from_socket = link.from_socket; to_socket = link.to_socket
+                    if to_node.name == condition_node.name and from_node.select:
+                        from_node_SKOut = GetSocketLocation(from_node, 1)
+                        from_node.location.y += condition_SkIn[to_socket]["pos"].y - from_node_SKOut[from_socket]["pos"].y - from_node.hide*24 + condition_node.hide*6 - 2
+                        if from_node.inputs:
+                            condition += 1
+                            temp_from_nodes.append(from_node)
+            from_nodes = temp_from_nodes
+            for condition_node in to_nodes:
+                condition_SkOut = GetSocketLocation(condition_node, 1)
+                for link in links:
+                    from_node = link.from_node; to_node = link.to_node
+                    from_socket = link.from_socket; to_socket = link.to_socket
+                    if from_node.name == condition_node.name and to_node.select:
+                        to_node_SKIn = GetSocketLocation(to_node, -1)
+                        to_node.location.y += condition_SkOut[from_socket]["pos"].y - to_node_SKIn[to_socket]["pos"].y - to_node.hide*4 + condition_node.hide*26
+                        if to_node.outputs:
+                            condition += 1
+                            temp_to_nodes.append(to_node)
+            to_nodes = temp_to_nodes
         return {"FINISHED"}

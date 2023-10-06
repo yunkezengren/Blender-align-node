@@ -10,7 +10,7 @@ from . align_op import *
 
 module = keymap
 _icons = None
-
+# 按顺序可以换成自定义图片图标
 # images = [ '左对齐-蓝色',
 #            '右对齐-蓝色',
 #            '下对齐-蓝色',
@@ -30,6 +30,7 @@ images = [ '左对齐-蓝双色',
            '网格-绿方块',
            '网格-蓝方块',
            '网格-蓝线框',
+           '直线-橙色虚线',
            ]
 images = [image + ".png" for image in images]
 
@@ -40,21 +41,21 @@ class SnapPieMenu(bpy.types.Menu):
         layout = self.layout
         pie = layout.menu_pie()
         # 左
-        pie.operator("node.snap_left_side_selection_nodes",      text = "左对齐",    icon_value=_icons[images[0]].icon_id, emboss=True, depress=False)
+        pie.operator("node.snap_left_side_selection_nodes",      text = "左对齐",    icon_value=_icons[images[0]].icon_id)
         # 右
-        pie.operator("node.snap_right_side_selection_nodes",     text = "右对齐",    icon_value=_icons[images[1]].icon_id, emboss=True, depress=False)
+        pie.operator("node.snap_right_side_selection_nodes",     text = "右对齐",    icon_value=_icons[images[1]].icon_id)
         # 底
-        pie.operator("node.snap_bottom_side_selection_nodes",    text = "底对齐",     icon_value=_icons[images[2]].icon_id, emboss=True, depress=False)
+        pie.operator("node.snap_bottom_side_selection_nodes",    text = "底对齐",     icon_value=_icons[images[2]].icon_id)
         # 顶
-        pie.operator("node.snap_top_side_selection_nodes",       text = "顶对齐",     icon_value=_icons[images[3]].icon_id, emboss=True, depress=False)
+        pie.operator("node.snap_top_side_selection_nodes",       text = "顶对齐",     icon_value=_icons[images[3]].icon_id)
         # 左上
-        pie.operator("node.snap_height_center_selection_nodes",  text = "对齐高度",     icon_value=_icons[images[4]].icon_id, emboss=True, depress=False)
+        pie.operator("node.snap_height_center_selection_nodes",  text = "对齐高度",     icon_value=_icons[images[4]].icon_id)
         # 右上
-        pie.operator("node.distribute_vertical",                 text = "垂直等距分布",    icon_value=_icons[images[5]].icon_id, emboss=True, depress=False)
+        pie.operator("node.distribute_vertical",                 text = "垂直等距分布",    icon_value=_icons[images[5]].icon_id)
         # 左下
-        pie.operator("node.snap_width_center_selection_nodes",   text = "对齐宽度",     icon_value=_icons[images[6]].icon_id, emboss=True, depress=False)
+        pie.operator("node.snap_width_center_selection_nodes",   text = "对齐宽度",     icon_value=_icons[images[6]].icon_id)
         # 右下
-        pie.operator("node.distribute_horizontal",               text = "水平等距分布",     icon_value=_icons[images[7]].icon_id, emboss=True, depress=False)
+        pie.operator("node.distribute_horizontal",               text = "水平等距分布",     icon_value=_icons[images[7]].icon_id)
 
 class AlignPieMenu(bpy.types.Menu):
     bl_idname = "APN_MT_align_pie"
@@ -69,15 +70,16 @@ class AlignPieMenu(bpy.types.Menu):
         # 底
         pie.operator("node.stake_down_selection_nodes",       text = "向下等距对齐",    icon = "ANCHOR_TOP")
         # 顶
-        pie.operator("node.stake_up_selection_nodes",         text = "向上等距对齐",    icon = "ANCHOR_BOTTOM")
+        pie.operator("node.straight_link",                    text = "拉直连线",       icon_value=_icons[images[11]].icon_id)
+        # pie.operator("node.stake_up_selection_nodes",       text = "向上等距对齐",    icon = "ANCHOR_BOTTOM")
         # 左上
         pie.operator("node.align_left_side_selection_nodes",  text = "向左水平分布",    icon = "TRIA_LEFT_BAR")
         # 右上
-        pie.operator("node.distribute_grid_relative",         text = "相对网格分布",    icon_value=_icons[images[8]].icon_id, emboss=True, depress=False)
+        pie.operator("node.distribute_grid_relative",         text = "相对网格分布",    icon_value=_icons[images[8]].icon_id)
         # 左下
         pie.operator("node.align_right_side_selection_nodes", text = "向右水平分布",    icon = "TRIA_RIGHT_BAR")
         # 右下
-        pie.operator("node.distribute_grid_absolute",         text = "绝对网格分布",    icon_value=_icons[images[9]].icon_id, emboss=True, depress=False)
+        pie.operator("node.distribute_grid_absolute",         text = "绝对网格分布",    icon_value=_icons[images[9]].icon_id)
 
 ordered_classes = [AlignPieMenuProperties,             AlignNodesPreferences,  AlignPieMenu, SnapPieMenu,
                    AlignDependentNodes,                AlignDependenciesNodes, StakeUpSelectionNodes,
@@ -87,15 +89,16 @@ ordered_classes = [AlignPieMenuProperties,             AlignNodesPreferences,  A
                    SnapRightSideSelectionNodes,        SnapLeftSideSelectionNodes, 
                    SnapHeightCenterSideSelectionNodes, SnapWidthCenterSideSelectionNodes,
                    Distribute_Horizontal,              Distribute_Vertical, 
-                   Distribute_Grid_Relative,           Distribute_Grid_Absolute
+                   Distribute_Grid_Relative,           Distribute_Grid_Absolute,
+                   Straight_Link
                    ]
 
 def register():
     global _icons
     _icons = bpy.utils.previews.new()
     for image in images:
-        if not image in _icons: 
-            _icons.load(image, os.path.join(os.path.dirname(__file__), 'icons', image), "IMAGE")
+        # if not image in _icons: 
+        _icons.load(image, os.path.join(os.path.dirname(__file__), 'icons', image), "IMAGE")
 
     for cls in ordered_classes:
         bpy.utils.register_class(cls)
